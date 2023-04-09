@@ -10,6 +10,9 @@ async function getAddressFromCEP(cep: string) {
   if (!data) {
     throw notFoundError();
   }
+  if (!data.logradouro) {
+    throw notFoundError();
+  }
   return data;
 }
 
@@ -40,8 +43,7 @@ type GetAddressResult = Omit<Address, 'createdAt' | 'updatedAt' | 'enrollmentId'
 async function createOrUpdateEnrollmentWithAddress(params: CreateOrUpdateEnrollmentWithAddress) {
   const enrollment = exclude(params, 'address');
   const address = getAddressForUpsert(params.address);
-  console.log(`params`);
-
+  console.log(params);
   try {
     const adress = await getAddressFromCEP(`${params.address.cep}`);
     if (adress.error) {
