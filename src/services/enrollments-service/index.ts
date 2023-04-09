@@ -6,12 +6,13 @@ import enrollmentRepository, { CreateEnrollmentParams } from '@/repositories/enr
 import { exclude } from '@/utils/prisma-utils';
 
 async function getAddressFromCEP(cep: string) {
-  try {
-    const result = await request.get(`${process.env.VIA_CEP_API}/${cep}/json/`);
-    return result;
-  } catch (error) {
+  const { data } = await request.get(`${process.env.VIA_CEP_API}/${cep}/json/`);
+
+  if (!data) {
     throw notFoundError();
   }
+
+  return data;
 }
 
 async function getOneWithAddressByUserId(userId: number): Promise<GetOneWithAddressByUserIdResult> {
