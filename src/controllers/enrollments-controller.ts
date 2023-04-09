@@ -34,7 +34,7 @@ export async function getAddressFromCEP(req: AuthenticatedRequest, res: Response
     const address = await enrollmentsService.getAddressFromCEP(`${cep}`);
     const { logradouro, complemento, bairro, localidade, uf } = address;
     if (!address.logradouro) {
-      return res.status(400).send({ error: true });
+      return res.status(204).send({ error: true });
     }
 
     res.status(httpStatus.OK).send({ logradouro, complemento, bairro, cidade: localidade, uf });
