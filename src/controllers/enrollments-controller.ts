@@ -33,7 +33,6 @@ export async function getAddressFromCEP(req: AuthenticatedRequest, res: Response
   const { cep } = req.query as Record<string, string>;
 
   try {
-    const { cep } = req.query;
     const address = await enrollmentsService.getAddressFromCEP(`${cep}`);
     const { logradouro, complemento, bairro, localidade, uf } = address;
 
