@@ -1,13 +1,13 @@
 import { prisma } from '@/config';
 
 async function allTypes() {
-  const response = await prisma.ticketType.findMany();
+  const types = await prisma.ticketType.findMany();
 
-  return response;
+  return types;
 }
 
 async function userTicket(userId: number) {
-  const response = await prisma.enrollment.findUnique({
+  const ticket = await prisma.enrollment.findUnique({
     where: {
       userId: userId,
     },
@@ -20,10 +20,23 @@ async function userTicket(userId: number) {
     },
   });
 
-  return response;
+  return ticket;
+}
+
+async function userEnrollment(userId: number) {
+  const enrollment = await prisma.enrollment.findUnique({
+    where: {
+      userId,
+    },
+    select: {
+      id: true,
+    },
+  });
+  return enrollment;
 }
 
 export default {
   allTypes,
   userTicket,
+  userEnrollment,
 };
