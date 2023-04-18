@@ -30,7 +30,6 @@ async function orderTicket(ticketTypeId: number, userId: number) {
     if (!TicketType) {
       throw notFoundError();
     }
-    // console.log(TicketType);
     return {
       id: reserve.id,
       status: reserve.status,
