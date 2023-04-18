@@ -35,8 +35,32 @@ async function userEnrollment(userId: number) {
   return enrollment;
 }
 
+async function createTicket(ticketTypeId: number, enrollmentId: number) {
+  const ticket = await prisma.ticket.create({
+    data: {
+      ticketTypeId: ticketTypeId,
+      enrollmentId: enrollmentId,
+      status: 'RESERVED',
+    },
+  });
+  return ticket;
+}
+
 export default {
   allTypes,
   userTicket,
   userEnrollment,
+  createTicket,
 };
+
+// id        Int       @id @default(autoincrement())
+// name      String    @db.VarChar(255)
+// cpf       String    @db.VarChar(255)
+// birthday  DateTime
+// phone     String    @db.VarChar(255)
+// userId    Int       @unique
+// User      User      @relation(fields: [userId], references: [id])
+// Address   Address[]
+// createdAt DateTime  @default(now())
+// updatedAt DateTime  @updatedAt
+// Ticket    Ticket[]
