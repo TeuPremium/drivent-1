@@ -20,7 +20,33 @@ async function findTicketInfo(ticketId: string, userId: number) {
   return ticketInfo;
 }
 
+async function postPayment(ticketId: number, cardData: object, userId: number) {
+  const enrollmentInfo = await ticketRepository.userTicket(userId);
+
+  const { issuer, number } = cardData as Record<string, string>;
+
+  const cardLastDigits = number.toString().slice(-4);
+
+  const ticketInfo = await paymentRepository.findTicket(ticketId.toString());
+  if (!ticketInfo) {
+    throw notFoundError();
+  }
+
+  const ticketType = await ticketRepository.findType(ticketInfo.ticketTypeId);
+
+  if (!enrollmentInfo.Ticket[0]) {
+    throw unauthorizedError();
+  }
+
+  const payTicket = await paymentRepository.payForTicket(ticketId, ticketType.price, issuer, cardLastDigits);
+
+  await paymentRepository.updateTciketStatus(ticketId);
+
+  return payTicket;
+}
+
 const paymentService = {
   findTicketInfo,
+  postPayment,
 };
 export default paymentService;

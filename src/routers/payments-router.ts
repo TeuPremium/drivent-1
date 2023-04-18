@@ -7,5 +7,6 @@ const paymentRouter = Router();
 paymentRouter.all('/*', authenticateToken);
 
 paymentRouter.get('/', paymentsController.getPayment);
+paymentRouter.post('/process/', paymentsController.postPayment);
 
 export { paymentRouter };
