@@ -20,10 +20,17 @@ async function findTicket(userId: number) {
 
 async function orderTicket(ticketTypeId: number, userId: number) {
   try {
-    const { id } = await ticketRepository.userEnrollment(userId);
+    const enrollment = await ticketRepository.userEnrollment(userId);
+    if (!enrollment) {
+      throw notFoundError();
+    }
 
-    const reserve = await ticketRepository.createTicket(ticketTypeId, id);
+    const reserve = await ticketRepository.createTicket(ticketTypeId, enrollment.id);
     const TicketType = await ticketRepository.findType(ticketTypeId);
+    if (!TicketType) {
+      throw notFoundError();
+    }
+    // console.log(TicketType);
     return {
       id: reserve.id,
       status: reserve.status,
@@ -34,7 +41,7 @@ async function orderTicket(ticketTypeId: number, userId: number) {
       updatedAt: reserve.updatedAt,
     };
   } catch (error) {
-    throw invalidDataError([`invalid ticket type`]);
+    throw error;
   }
 }
 

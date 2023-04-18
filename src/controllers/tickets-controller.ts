@@ -24,18 +24,15 @@ async function getTickets(req: Request, res: Response) {
   }
 }
 
-async function postTickets(req: Request, res: Response) {
+async function postTickets(req: Request, res: Response, next: NextFunction) {
   try {
     const { ticketTypeId }: { ticketTypeId: number } = req.body;
     const { userId } = res.locals;
     const response = await ticketServices.orderTicket(ticketTypeId, userId);
-
     console.log(response);
-
     res.status(httpStatus.CREATED).send(response);
   } catch (error) {
-    // return res.sendStatus(500);
-    throw invalidDataError([`invalid ticket format`]);
+    next(error);
   }
 }
 
