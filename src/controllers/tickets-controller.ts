@@ -2,7 +2,6 @@ import { NextFunction, Request, Response } from 'express';
 import httpStatus from 'http-status';
 import ticketRepository from '@/repositories/ticket-repository';
 import ticketServices from '@/services/ticket-services';
-import { invalidDataError } from '@/errors';
 
 async function getTicketTypes(req: Request, res: Response, next: NextFunction) {
   try {

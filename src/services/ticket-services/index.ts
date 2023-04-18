@@ -1,4 +1,4 @@
-import { invalidDataError, notFoundError } from '@/errors';
+import { notFoundError } from '@/errors';
 import ticketRepository from '@/repositories/ticket-repository';
 
 async function findTicket(userId: number) {
