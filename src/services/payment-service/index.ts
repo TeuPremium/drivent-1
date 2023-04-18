@@ -16,11 +16,6 @@ async function findTicketInfo(ticketId: string, userId: number) {
   if (!enrollmentInfo.Ticket[0]) {
     throw unauthorizedError();
   }
-  console.log('ticket');
-  console.log(ticketInfo);
-  console.log('enroll');
-
-  console.log(enrollmentInfo.Ticket);
 
   return ticketInfo;
 }
