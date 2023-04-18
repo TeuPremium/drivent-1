@@ -32,10 +32,10 @@ async function postTickets(req: Request, res: Response) {
 
     console.log(response);
 
-    res.sendStatus(httpStatus.CREATED);
+    res.status(httpStatus.CREATED).send(response);
   } catch (error) {
-    return res.sendStatus(500);
-    // throw invalidDataError([`invalid ticket format`]);
+    // return res.sendStatus(500);
+    throw invalidDataError([`invalid ticket format`]);
   }
 }
 
