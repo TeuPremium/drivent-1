@@ -17,7 +17,11 @@ async function findTicketInfo(ticketId: string, userId: number) {
     throw unauthorizedError();
   }
 
-  return ticketInfo;
+  const paymentInfo = await paymentRepository.findTicketinfo(parseInt(ticketId));
+
+  console.log(paymentInfo);
+
+  return paymentInfo;
 }
 
 async function postPayment(ticketId: number, cardData: object, userId: number) {

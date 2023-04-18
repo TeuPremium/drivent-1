@@ -28,17 +28,10 @@ async function updateTciketStatus(ticketId: number) {
   });
 }
 
-async function findTicketinfo(ticketId: number, userId: number) {
-  return prisma.enrollment.findFirst({
+async function findTicketinfo(ticketId: number) {
+  return await prisma.payment.findFirst({
     where: {
-      userId: userId,
-    },
-    select: {
-      Ticket: {
-        where: {
-          id: Number(ticketId),
-        },
-      },
+      ticketId: ticketId,
     },
   });
 }
