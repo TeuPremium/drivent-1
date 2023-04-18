@@ -1,7 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import httpStatus from 'http-status';
 import paymentService from '@/services/payment-service';
-import { requestError } from '@/errors';
 
 async function getPayment(req: Request, res: Response, next: NextFunction) {
   try {
