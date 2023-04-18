@@ -19,8 +19,6 @@ async function findTicketInfo(ticketId: string, userId: number) {
 
   const paymentInfo = await paymentRepository.findTicketinfo(parseInt(ticketId));
 
-  console.log(paymentInfo);
-
   return paymentInfo;
 }
 
