@@ -30,15 +30,12 @@ async function postPayment(ticketId: number, cardData: object, userId: number) {
   const cardLastDigits = number.toString().slice(-4);
 
   const ticketInfo = await paymentRepository.findTicket(ticketId.toString());
-  if (!ticketInfo) {
-    throw notFoundError();
-  }
+
+  if (!ticketInfo) throw notFoundError();
 
   const ticketType = await ticketRepository.findType(ticketInfo.ticketTypeId);
 
-  if (!enrollmentInfo.Ticket[0]) {
-    throw unauthorizedError();
-  }
+  if (!enrollmentInfo.Ticket[0]) throw unauthorizedError();
 
   const payTicket = await paymentRepository.payForTicket(ticketId, ticketType.price, issuer, cardLastDigits);
 
