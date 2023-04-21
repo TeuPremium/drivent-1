@@ -3,6 +3,7 @@ import 'express-async-errors';
 import express, { Express } from 'express';
 import cors from 'cors';
 
+import { hotelRouter } from './routers/hotel-router';
 import { loadEnv, connectDb, disconnectDB } from '@/config';
 
 loadEnv();
@@ -28,6 +29,7 @@ app
   .use('/enrollments', enrollmentsRouter)
   .use('/tickets', ticketRouter)
   .use('/payments', paymentRouter)
+  .use('./hotels', hotelRouter)
   .use(handleApplicationErrors);
 
 export function init(): Promise<Express> {
