@@ -26,18 +26,22 @@ describe('GET /hotels', () => {
 
   it('should respond with all listed hotels', async () => {
     const hotel = generateValidHotel();
+
     const addHotel = await createHotel(hotel.name, hotel.image);
 
     const room = generateValidRoom(addHotel.id);
     const addRoom = await createRoom(room.name, room.capacity, room.hotelId);
 
-    const getAllHotels = await prisma.hotel.findMany();
+    const findHotel = await prisma.hotel.findUnique({
+      include: { Rooms: true },
+      where: {
+        id: addHotel.id,
+      },
+    });
 
-    console.log(addHotel);
-    console.log(getAllHotels);
-    // const getHotels = await server.get('/hotels');
-    // expect(getHotels.body).toMatchObject(getAllHotels);
-    expect(getAllHotels).toEqual(getAllHotels);
+    console.log(findHotel.Rooms);
+    const getHotels = await server.get('/hotels');
+    expect(getHotels.body).toMatchObject(findHotel);
   });
 
   // it('should respond with all listed hotels', async () => {
