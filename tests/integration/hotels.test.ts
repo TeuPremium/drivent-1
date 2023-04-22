@@ -14,7 +14,7 @@ const server = supertest(app);
 
 describe('GET /hotels', () => {
   const generateValidHotel = () => ({
-    name: faker.company.companyName(),
+    name: faker.name.lastName(),
     image: faker.image.city(),
   });
 
@@ -25,12 +25,19 @@ describe('GET /hotels', () => {
   });
 
   it('should respond with all listed hotels', async () => {
-    // const getHotels = await server.get('/hotels');
     const hotel = generateValidHotel();
-    // const rooms = await createRoom(, )
-    console.log(hotel);
-    // expect(getHotels.body).toMatchObject();
-    expect(0).toEqual(0);
+    const addHotel = await createHotel(hotel.name, hotel.image);
+
+    const room = generateValidRoom(addHotel.id);
+    const addRoom = await createRoom(room.name, room.capacity, room.hotelId);
+
+    const getAllHotels = await prisma.hotel.findMany();
+
+    console.log(addHotel);
+    console.log(getAllHotels);
+    // const getHotels = await server.get('/hotels');
+    // expect(getHotels.body).toMatchObject(getAllHotels);
+    expect(getAllHotels).toEqual(getAllHotels);
   });
 
   // it('should respond with all listed hotels', async () => {
