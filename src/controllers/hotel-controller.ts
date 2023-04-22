@@ -3,8 +3,9 @@ import hotelServices from '@/services/hotel-service';
 
 async function getAllHotels(req: Request, res: Response, next: NextFunction) {
   try {
-    const hotelList = await hotelServices.getAllHotels;
-    return res.status(200).send(hotelList);
+    // const hotelList = await hotelServices.getAllHotels;
+    // return res.status(200).send(hotelList);
+    return res.sendStatus(200);
   } catch (error) {
     next(error);
   }
