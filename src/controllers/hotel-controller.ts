@@ -6,7 +6,7 @@ async function getAllHotels(req: Request, res: Response, next: NextFunction) {
   try {
     const { userId } = res.locals;
     const hotelList = await hotelServices.getAllHotels(userId);
-    console.log(hotelList);
+
     return res.status(httpStatus.OK).send(hotelList);
   } catch (error) {
     next(error);
@@ -18,6 +18,7 @@ async function getHotelById(req: Request, res: Response, next: NextFunction) {
     const { id } = req.params;
     const { userId } = res.locals;
     const hotel = await hotelServices.getHotelById(userId, parseInt(id));
+
     return res.status(200).send(hotel);
   } catch (error) {
     next(error);

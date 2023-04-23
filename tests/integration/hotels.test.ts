@@ -212,7 +212,7 @@ describe('GET /hotels/:hotelId', () => {
 
     const enrollment = await createEnrollmentWithAddress(user);
 
-    const ticketType = await createTicketType();
+    const ticketType = await createTicketType(false, true);
     await createTicket(enrollment.id, ticketType.id, TicketStatus.PAID);
 
     const response = await server.get('/hotels/0').set('Authorization', `Bearer ${token}`);
@@ -285,6 +285,7 @@ describe('GET /hotels/:hotelId', () => {
     });
 
     const response = await server.get(`/hotels/${addHotel.id}`).set('Authorization', `Bearer ${token}`);
+
     expect(response.body).toMatchObject(findHotel);
     expect(response.status).toEqual(httpStatus.OK);
   });

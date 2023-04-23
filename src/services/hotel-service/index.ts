@@ -1,4 +1,4 @@
-import { getHotels } from '@/repositories/hotel-repository';
+import { getHotelRooms, getHotels } from '@/repositories/hotel-repository';
 import { notFoundError } from '@/errors';
 import ticketRepository from '@/repositories/ticket-repository';
 import { paymentRequiredError } from '@/errors/payment-required-error';
@@ -47,7 +47,7 @@ async function getHotelById(userId: number, hotelId: number) {
     throw paymentRequiredError();
   }
 
-  const hotelList = await getHotels();
+  const hotelRooms = await getHotelRooms(hotelId);
 
   const { ticketTypeId } = Ticket[0];
   const { isRemote, includesHotel } = await ticketRepository.findType(ticketTypeId);
@@ -56,11 +56,11 @@ async function getHotelById(userId: number, hotelId: number) {
     throw paymentRequiredError();
   }
 
-  if (!hotelList[0]) {
+  if (!hotelRooms) {
     throw notFoundError();
   }
 
-  return hotelList;
+  return hotelRooms;
 }
 
 const hotelServices = {

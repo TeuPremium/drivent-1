@@ -4,11 +4,13 @@ export async function getHotels() {
   return await prisma.hotel.findMany();
 }
 
-// export function getHotelRooms(name: string, capacity: number, id: number): Promise<Room> {
-//   return prisma.hotel.create({
-//     data: {
-//       name,
-//       hotelId,
-//     },
-//   });
-// }
+export function getHotelRooms(hotelId: number) {
+  return prisma.hotel.findUnique({
+    where: {
+      id: hotelId,
+    },
+    include: {
+      Rooms: true,
+    },
+  });
+}
