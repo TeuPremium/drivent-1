@@ -1,8 +1,7 @@
-import { Hotel, Room } from '@prisma/client';
 import { prisma } from '@/config';
 
-export function getHotels() {
-  return prisma.hotel.findMany({});
+export async function getHotels() {
+  return await prisma.hotel.findMany();
 }
 
 // export function getHotelRooms(name: string, capacity: number, id: number): Promise<Room> {
