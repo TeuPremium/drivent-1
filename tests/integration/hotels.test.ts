@@ -72,25 +72,11 @@ describe('GET /hotels', () => {
     const user = await createUser();
     const token = await generateValidToken(user);
 
-    const enrollment = await createEnrollmentWithAddress(user);
+    await createEnrollmentWithAddress(user);
 
     const response = await server.get('/hotels').set('Authorization', `Bearer ${token}`);
 
     expect(response.status).toEqual(httpStatus.NOT_FOUND);
-  });
-
-  it('should respond with status code 402 when ticket is not payed', async () => {
-    const user = await createUser();
-    const token = await generateValidToken(user);
-
-    const enrollment = await createEnrollmentWithAddress(user);
-
-    const ticketType = await createTicketType();
-    const ticket = await createTicket(enrollment.id, ticketType.id, TicketStatus.RESERVED);
-
-    const response = await server.get('/hotels').set('Authorization', `Bearer ${token}`);
-
-    expect(response.status).toEqual(httpStatus.PAYMENT_REQUIRED);
   });
 
   it('should respond with status code 404 when there are no hotels listed', async () => {
@@ -100,11 +86,25 @@ describe('GET /hotels', () => {
     const enrollment = await createEnrollmentWithAddress(user);
 
     const ticketType = await createTicketType();
-    const ticket = await createTicket(enrollment.id, ticketType.id, TicketStatus.PAID);
+    await createTicket(enrollment.id, ticketType.id, TicketStatus.PAID);
 
     const response = await server.get('/hotels').set('Authorization', `Bearer ${token}`);
 
     expect(response.status).toBe(httpStatus.NOT_FOUND);
+  });
+
+  it('should respond with status code 402 when ticket is not payed', async () => {
+    const user = await createUser();
+    const token = await generateValidToken(user);
+
+    const enrollment = await createEnrollmentWithAddress(user);
+
+    const ticketType = await createTicketType();
+    await createTicket(enrollment.id, ticketType.id, TicketStatus.RESERVED);
+
+    const response = await server.get('/hotels').set('Authorization', `Bearer ${token}`);
+
+    expect(response.status).toEqual(httpStatus.PAYMENT_REQUIRED);
   });
 
   it('should respond with status code 402 when ticket is remote', async () => {
@@ -114,7 +114,7 @@ describe('GET /hotels', () => {
     const enrollment = await createEnrollmentWithAddress(user);
 
     const ticketType = await createTicketType(true);
-    const ticket = await createTicket(enrollment.id, ticketType.id, TicketStatus.PAID);
+    await createTicket(enrollment.id, ticketType.id, TicketStatus.PAID);
 
     const response = await server.get('/hotels').set('Authorization', `Bearer ${token}`);
 
@@ -128,7 +128,7 @@ describe('GET /hotels', () => {
     const enrollment = await createEnrollmentWithAddress(user);
 
     const ticketType = await createTicketType(false, false);
-    const ticket = await createTicket(enrollment.id, ticketType.id, TicketStatus.PAID);
+    await createTicket(enrollment.id, ticketType.id, TicketStatus.PAID);
 
     const response = await server.get('/hotels').set('Authorization', `Bearer ${token}`);
 
@@ -145,8 +145,7 @@ describe('GET /hotels', () => {
     const enrollment = await createEnrollmentWithAddress(user);
 
     const ticketType = await createTicketType(false, true);
-    const ticket = await createTicket(enrollment.id, ticketType.id, TicketStatus.PAID);
-    console.log(ticket);
+    await createTicket(enrollment.id, ticketType.id, TicketStatus.PAID);
 
     const room = generateValidRoom(addHotel.id);
     await createRoom(room.name, room.capacity, room.hotelId);
@@ -157,10 +156,6 @@ describe('GET /hotels', () => {
         id: addHotel.id,
       },
     });
-
-    // const allrooms = await prisma.hotel.findMany({ include: { Rooms: true } });
-
-    // console.log(allrooms);
 
     const response = await server.get('/hotels').set('Authorization', `Bearer ${token}`);
     console.log(findHotels);
@@ -258,7 +253,9 @@ describe('GET /hotels', () => {
 //     const hotel = generateValidHotel();
 //     const room = generateValidRoom();
 //     const response = await server.get('/hotels/:id');
+// const allrooms = await prisma.hotel.findMany({ include: { Rooms: true } });
 
+// console.log(allrooms);
 //     // expect(response.body).toMatchObject(findHotels);
 //     // expect(response.status).toEqual(httpStatus.OK);
 //   });
