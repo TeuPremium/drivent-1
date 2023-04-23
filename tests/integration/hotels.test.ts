@@ -17,6 +17,9 @@ import app, { init } from '@/app';
 
 beforeAll(async () => {
   await init();
+});
+
+beforeEach(async () => {
   await cleanDb();
 });
 
@@ -85,7 +88,7 @@ describe('GET /hotels', () => {
 
     const enrollment = await createEnrollmentWithAddress(user);
 
-    const ticketType = await createTicketType();
+    const ticketType = await createTicketType(false, true);
     await createTicket(enrollment.id, ticketType.id, TicketStatus.PAID);
 
     const response = await server.get('/hotels').set('Authorization', `Bearer ${token}`);
