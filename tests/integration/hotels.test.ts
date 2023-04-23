@@ -150,15 +150,9 @@ describe('GET /hotels', () => {
     const room = generateValidRoom(addHotel.id);
     await createRoom(room.name, room.capacity, room.hotelId);
 
-    const findHotels = await prisma.hotel.findUnique({
-      include: { Rooms: true },
-      where: {
-        id: addHotel.id,
-      },
-    });
+    const findHotels = await prisma.hotel.findMany({});
 
     const response = await server.get('/hotels').set('Authorization', `Bearer ${token}`);
-    console.log(findHotels);
     expect(response.body).toMatchObject(findHotels);
     expect(response.status).toEqual(httpStatus.OK);
   });
@@ -288,7 +282,6 @@ describe('GET /hotels/:hotelId', () => {
     });
 
     const response = await server.get(`/hotels/${addHotel.id}`).set('Authorization', `Bearer ${token}`);
-    console.log(findHotel);
     expect(response.body).toMatchObject(findHotel);
     expect(response.status).toEqual(httpStatus.OK);
   });

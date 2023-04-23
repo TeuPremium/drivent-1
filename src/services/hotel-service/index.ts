@@ -1,5 +1,7 @@
+import { getHotels } from '@/repositories/hotel-repository';
+
 async function getAllHotels() {
-  return 0;
+  return getHotels();
 }
 
 async function getHotelById(id: number) {
