@@ -9,7 +9,6 @@ async function getAllHotels(req: Request, res: Response, next: NextFunction) {
 
     return res.status(httpStatus.OK).send(hotelList);
   } catch (error) {
-    console.log(error);
     next(error);
   }
 }
