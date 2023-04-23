@@ -206,7 +206,7 @@ describe('GET /hotels/:hotelId', () => {
     expect(response.status).toEqual(httpStatus.NOT_FOUND);
   });
 
-  it('should respond with status code 404 when there are no hotels listed', async () => {
+  it('should respond with status code 404 when hotel id does not exist', async () => {
     const user = await createUser();
     const token = await generateValidToken(user);
 
@@ -215,7 +215,7 @@ describe('GET /hotels/:hotelId', () => {
     const ticketType = await createTicketType();
     await createTicket(enrollment.id, ticketType.id, TicketStatus.PAID);
 
-    const response = await server.get('/hotels/1').set('Authorization', `Bearer ${token}`);
+    const response = await server.get('/hotels/0').set('Authorization', `Bearer ${token}`);
 
     expect(response.status).toBe(httpStatus.NOT_FOUND);
   });
