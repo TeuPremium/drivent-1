@@ -3,14 +3,36 @@ import { TicketStatus } from '@prisma/client';
 import { prisma } from '@/config';
 
 export async function createTicketType(isRemote?: boolean, includesHotel?: boolean) {
-  return prisma.ticketType.create({
-    data: {
-      name: faker.name.findName(),
-      price: faker.datatype.number(),
-      isRemote: isRemote || faker.datatype.boolean(),
-      includesHotel: includesHotel || faker.datatype.boolean(),
-    },
-  });
+  console.log(isRemote);
+  console.log(includesHotel);
+  if (isRemote) {
+    return prisma.ticketType.create({
+      data: {
+        name: faker.name.findName(),
+        price: faker.datatype.number(),
+        isRemote: true,
+        includesHotel: false,
+      },
+    });
+  } else if (!isRemote && !includesHotel) {
+    return prisma.ticketType.create({
+      data: {
+        name: faker.name.findName(),
+        price: faker.datatype.number(),
+        isRemote: false,
+        includesHotel: false,
+      },
+    });
+  } else if (includesHotel) {
+    return prisma.ticketType.create({
+      data: {
+        name: faker.name.findName(),
+        price: faker.datatype.number(),
+        isRemote: false,
+        includesHotel: true,
+      },
+    });
+  }
 }
 
 export async function createTicket(enrollmentId: number, ticketTypeId: number, status: TicketStatus) {

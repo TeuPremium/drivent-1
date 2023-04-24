@@ -36,8 +36,6 @@ const generateValidRoom = (hotelId: number) => ({
   capacity: Math.floor(Math.random() * 10),
 });
 
-//criar erros de body invalido//
-
 describe('GET /hotels', () => {
   it('should respond with status 401 if no token is given', async () => {
     const response = await server.get('/hotels');
@@ -139,11 +137,20 @@ describe('GET /hotels', () => {
     const room = generateValidRoom(addHotel.id);
     await createRoom(room.name, room.capacity, room.hotelId);
 
-    const findHotels = await prisma.hotel.findMany({});
+    const hotels = await prisma.hotel.findMany({});
 
     const response = await server.get('/hotels').set('Authorization', `Bearer ${token}`);
-
-    // expect(response.body).toMatchObject(findHotels);
+    expect(response.body).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          id: expect.any(Number),
+          name: expect.any(String),
+          image: expect.any(String),
+          createdAt: expect.any(String),
+          updatedAt: expect.any(String),
+        }),
+      ]),
+    );
     expect(response.status).toEqual(httpStatus.OK);
   });
 });
@@ -228,6 +235,7 @@ describe('GET /hotels/:hotelId', () => {
     const enrollment = await createEnrollmentWithAddress(user);
 
     const ticketType = await createTicketType(false, false);
+
     await createTicket(enrollment.id, ticketType.id, TicketStatus.PAID);
 
     const response = await server.get('/hotels/1').set('Authorization', `Bearer ${token}`);
@@ -250,7 +258,7 @@ describe('GET /hotels/:hotelId', () => {
     const room = generateValidRoom(addHotel.id);
     await createRoom(room.name, room.capacity, room.hotelId);
 
-    const { Rooms } = await prisma.hotel.findUnique({
+    const { id, name, image } = await prisma.hotel.findUnique({
       include: { Rooms: true },
       where: {
         id: addHotel.id,
@@ -259,7 +267,23 @@ describe('GET /hotels/:hotelId', () => {
 
     const response = await server.get(`/hotels/${addHotel.id}`).set('Authorization', `Bearer ${token}`);
 
-    // expect(response.body.Rooms).toMatchObject(Rooms);
+    expect(response.body).toEqual({
+      id,
+      name,
+      image,
+      createdAt: expect.any(String),
+      updatedAt: expect.any(String),
+      Rooms: [
+        {
+          id: expect.any(Number),
+          capacity: expect.any(Number),
+          name: expect.any(String),
+          hotelId: expect.any(Number),
+          createdAt: expect.any(String),
+          updatedAt: expect.any(String),
+        },
+      ],
+    });
     expect(response.status).toEqual(httpStatus.OK);
   });
 });
