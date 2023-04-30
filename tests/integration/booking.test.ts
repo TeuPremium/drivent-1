@@ -13,7 +13,6 @@ import {
   createUser,
 } from '../factories';
 import bookingsFactory from '../factories/bookings-factory';
-import { prisma } from '@/config';
 import app, { init } from '@/app';
 
 beforeAll(async () => {
@@ -37,7 +36,7 @@ const generateValidRoom = (hotelId: number) => ({
 
 const server = supertest(app);
 
-describe('GET /booking', async () => {
+describe('GET /booking', () => {
   it('should respond with status 401 if no token is given', async () => {
     const response = await server.get('/booking');
 
@@ -71,12 +70,35 @@ describe('GET /booking', async () => {
   });
 
   it('should respond with status code 200 with booking information', async () => {
+    const hotel = generateValidHotel();
+    const addHotel = await createHotel(hotel.name, hotel.image);
+
     const user = await createUser();
     const token = await generateValidToken(user);
-    // await bookingsFactory;
+
+    const enrollment = await createEnrollmentWithAddress(user);
+
+    const ticketType = await createTicketType(false, true);
+    await createTicket(enrollment.id, ticketType.id, TicketStatus.PAID);
+
+    const room = generateValidRoom(addHotel.id);
+    const roomInfo = await createRoom(room.name, room.capacity, room.hotelId);
+
+    const { id, roomId } = await bookingsFactory.createBooking(user.id, roomInfo.id);
 
     const response = await server.get('/booking').set('Authorization', `Bearer ${token}`);
 
-    expect(response.status).toEqual(httpStatus.NOT_FOUND);
+    expect(response.body).toEqual({
+      id,
+      Room: {
+        id: roomId,
+        capacity: expect.any(Number),
+        name: expect.any(String),
+        hotelId: expect.any(Number),
+        createdAt: expect.any(String),
+        updatedAt: expect.any(String),
+      },
+    });
+    expect(response.status).toEqual(httpStatus.OK);
   });
 });
