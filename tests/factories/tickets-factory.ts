@@ -3,8 +3,6 @@ import { TicketStatus } from '@prisma/client';
 import { prisma } from '@/config';
 
 export async function createTicketType(isRemote?: boolean, includesHotel?: boolean) {
-  console.log(isRemote);
-  console.log(includesHotel);
   if (isRemote) {
     return prisma.ticketType.create({
       data: {

@@ -33,7 +33,7 @@ const generateValidHotel = () => ({
 const generateValidRoom = (hotelId: number) => ({
   name: faker.name.firstName(),
   hotelId,
-  capacity: Math.floor(Math.random() * 10),
+  capacity: Math.ceil(Math.random() * 10),
 });
 
 describe('GET /hotels', () => {
@@ -136,8 +136,6 @@ describe('GET /hotels', () => {
 
     const room = generateValidRoom(addHotel.id);
     await createRoom(room.name, room.capacity, room.hotelId);
-
-    const hotels = await prisma.hotel.findMany({});
 
     const response = await server.get('/hotels').set('Authorization', `Bearer ${token}`);
     expect(response.body).toEqual(
