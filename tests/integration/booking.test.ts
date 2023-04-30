@@ -193,6 +193,28 @@ describe('post /booking', () => {
     expect(response.status).toEqual(httpStatus.FORBIDDEN);
   });
 
+  it('should respond with status code 403 when the ticket has no hotel', async () => {
+    const hotel = generateValidHotel();
+    const addHotel = await createHotel(hotel.name, hotel.image);
+
+    const user = await createUser();
+    const token = await generateValidToken(user);
+    console.log(token);
+    const enrollment = await createEnrollmentWithAddress(user);
+
+    const ticketType = await createTicketType(false, true);
+    await createTicket(enrollment.id, ticketType.id, TicketStatus.RESERVED);
+
+    const room = generateValidRoom(addHotel.id);
+    const roomInfo = await createRoom(room.name, room.capacity, room.hotelId);
+
+    const { roomId } = await bookingsFactory.createBooking(user.id, roomInfo.id);
+
+    const response = await server.post('/booking').set('Authorization', `Bearer ${token}`).send({ roomId });
+
+    expect(response.status).toEqual(httpStatus.FORBIDDEN);
+  });
+
   it('should respond with status code 403 when there is no vacancy', async () => {
     const hotel = generateValidHotel();
     const addHotel = await createHotel(hotel.name, hotel.image);
