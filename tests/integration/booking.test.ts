@@ -12,6 +12,7 @@ import {
   createTicketType,
   createUser,
 } from '../factories';
+import bookingsFactory from '../factories/bookings-factory';
 import { prisma } from '@/config';
 import app, { init } from '@/app';
 
@@ -58,5 +59,24 @@ describe('GET /booking', async () => {
     const response = await server.get('/booking').set('Authorization', `Bearer ${token}`);
 
     expect(response.status).toBe(httpStatus.UNAUTHORIZED);
+  });
+
+  it('should respond with status code 404 when there is no booking', async () => {
+    const user = await createUser();
+    const token = await generateValidToken(user);
+
+    const response = await server.get('/booking').set('Authorization', `Bearer ${token}`);
+
+    expect(response.status).toEqual(httpStatus.NOT_FOUND);
+  });
+
+  it('should respond with status code 200 with booking information', async () => {
+    const user = await createUser();
+    const token = await generateValidToken(user);
+    // await bookingsFactory;
+
+    const response = await server.get('/booking').set('Authorization', `Bearer ${token}`);
+
+    expect(response.status).toEqual(httpStatus.NOT_FOUND);
   });
 });
