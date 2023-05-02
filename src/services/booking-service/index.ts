@@ -27,12 +27,13 @@ async function createBooking(userId: number, roomId: number) {
 
 async function updateBooking(userId: number, roomId: number) {
   const hotelRooms = await bookingRepository.findRoom(roomId);
-  // console.log(hotelRooms);
   if (!hotelRooms) throw notFoundError();
   if (hotelRooms.Booking[0]) throw forbiddenError();
 
   const previousBooking = await bookingRepository.findBooking(userId);
   if (!previousBooking) throw forbiddenError();
+
+  await bookingRepository.removeBooking(previousBooking.id);
 
   const booking = await bookingRepository.addBooking(userId, roomId);
 

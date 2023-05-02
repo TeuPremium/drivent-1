@@ -389,13 +389,10 @@ describe('put /booking', () => {
     const room = generateValidRoom(addHotel.id);
     const room2 = generateValidRoom(addHotel.id);
     const roomInfo = await createRoom(room.name, room.capacity, room.hotelId);
-    createRoom(room2.name, room2.capacity, room2.hotelId);
+    await createRoom(room2.name, room2.capacity, room2.hotelId);
     const { roomId } = await bookingsFactory.createBooking(user.id, roomInfo.id);
-
-    const response = await server
-      .put('/booking')
-      .set('Authorization', `Bearer ${token}`)
-      .send({ roomId: roomId + 1 });
+    const sendId = roomId + 1;
+    const response = await server.put('/booking').set('Authorization', `Bearer ${token}`).send({ roomId: sendId });
 
     expect(response.status).toEqual(httpStatus.OK);
   });

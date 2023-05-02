@@ -21,6 +21,14 @@ async function addBooking(userId: number, roomId: number) {
   });
 }
 
+async function removeBooking(id: number) {
+  return await prisma.booking.delete({
+    where: {
+      id,
+    },
+  });
+}
+
 async function findRoom(roomId: number) {
   const room = await prisma.room.findFirst({
     where: { id: roomId },
@@ -30,4 +38,4 @@ async function findRoom(roomId: number) {
   return room;
 }
 
-export default { findBooking, addBooking, findRoom };
+export default { findBooking, addBooking, findRoom, removeBooking };
