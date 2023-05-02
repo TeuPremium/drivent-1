@@ -23,7 +23,6 @@ async function postBooking(req: Request, res: Response, next: NextFunction) {
     const { roomId } = req.body;
 
     const booking = await bookingService.createBooking(userId, roomId);
-
     return res.send(booking).status(200);
   } catch (error) {
     next(error);

@@ -202,7 +202,7 @@ describe('post /booking', () => {
     expect(response.status).toEqual(httpStatus.FORBIDDEN);
   });
 
-  it('should respond with status code 403 when there is no vacancy', async () => {
+  it('should respond with status code 403 when room is not available', async () => {
     const hotel = generateValidHotel();
     const addHotel = await createHotel(hotel.name, hotel.image);
 
@@ -237,9 +237,10 @@ describe('post /booking', () => {
     const room = generateValidRoom(addHotel.id);
     const roomInfo = await createRoom(room.name, room.capacity, room.hotelId);
 
-    const { roomId } = await bookingsFactory.createBooking(user.id, roomInfo.id);
-
-    const response = await server.post('/booking').set('Authorization', `Bearer ${token}`).send({ roomId: roomId });
+    const response = await server
+      .post('/booking')
+      .set('Authorization', `Bearer ${token}`)
+      .send({ roomId: roomInfo.id });
 
     expect(response.status).toEqual(httpStatus.OK);
   });
@@ -388,9 +389,7 @@ describe('put /booking', () => {
     const room = generateValidRoom(addHotel.id);
     const roomInfo = await createRoom(room.name, room.capacity, room.hotelId);
 
-    const { roomId } = await bookingsFactory.createBooking(user.id, roomInfo.id);
-
-    const response = await server.put('/booking').set('Authorization', `Bearer ${token}`).send({ roomId: roomId });
+    const response = await server.put('/booking').set('Authorization', `Bearer ${token}`).send({ roomId: roomInfo.id });
 
     expect(response.status).toEqual(httpStatus.OK);
   });
