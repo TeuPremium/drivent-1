@@ -12,4 +12,13 @@ async function findBooking(userId: number) {
   });
 }
 
-export default { findBooking };
+async function addBooking(userId: number, roomId: number) {
+  return await prisma.booking.create({
+    data: {
+      userId,
+      roomId,
+    },
+  });
+}
+
+export default { findBooking, addBooking };
