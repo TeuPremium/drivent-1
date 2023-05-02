@@ -31,7 +31,7 @@ const generateValidHotel = () => ({
 const generateValidRoom = (hotelId: number, capacity?: string) => ({
   name: faker.name.firstName(),
   hotelId,
-  capacity: parseInt(capacity) || Math.floor(Math.random() * 10),
+  capacity: capacity ? parseInt(capacity) : Math.floor(Math.random() * 10) + 1,
 });
 
 const server = supertest(app);
@@ -213,7 +213,7 @@ describe('post /booking', () => {
     const ticketType = await createTicketType(false, true);
     await createTicket(enrollment.id, ticketType.id, TicketStatus.PAID);
 
-    const room = generateValidRoom(addHotel.id);
+    const room = generateValidRoom(addHotel.id, '0');
     const roomInfo = await createRoom(room.name, room.capacity, room.hotelId);
 
     const { roomId } = await bookingsFactory.createBooking(user.id, roomInfo.id);
@@ -381,8 +381,6 @@ describe('put /booking', () => {
     const user = await createUser();
     const token = await generateValidToken(user);
     const enrollment = await createEnrollmentWithAddress(user);
-    console.log(enrollment);
-    console.log(user);
 
     const ticketType = await createTicketType(false, true);
     await createTicket(enrollment.id, ticketType.id, TicketStatus.PAID);

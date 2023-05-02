@@ -21,13 +21,9 @@ async function postBooking(req: Request, res: Response, next: NextFunction) {
     const { userId } = res.locals;
 
     const { roomId } = req.body;
-    if (roomId == undefined) {
-      console.log(roomId);
-      throw notFoundError;
-    }
+
     const booking = await bookingService.createBooking(userId, roomId);
 
-    console.log(booking);
     return res.send(booking).status(200);
   } catch (error) {
     next(error);
