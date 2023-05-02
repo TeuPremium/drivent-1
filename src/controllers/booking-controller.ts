@@ -22,11 +22,26 @@ async function postBooking(req: Request, res: Response, next: NextFunction) {
 
     const { roomId } = req.body;
 
-    const booking = await bookingService.createBooking(userId, roomId);
-    return res.send(booking).status(200);
+    const { id } = await bookingService.createBooking(userId, roomId);
+
+    return res.send({ bookingId: id }).status(200);
   } catch (error) {
     next(error);
   }
 }
 
-export default { getBooking, postBooking };
+async function updateBooking(req: Request, res: Response, next: NextFunction) {
+  try {
+    const { userId } = res.locals;
+
+    const { roomId } = req.body;
+
+    const { id } = await bookingService.updateBooking(userId, roomId);
+
+    return res.send({ bookingId: id }).status(200);
+  } catch (error) {
+    next(error);
+  }
+}
+
+export default { getBooking, postBooking, updateBooking };

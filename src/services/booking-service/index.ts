@@ -20,11 +20,23 @@ async function createBooking(userId: number, roomId: number) {
   if (!hotelRooms) throw notFoundError();
   if (hotelRooms.Booking[0]) throw forbiddenError();
 
+  const booking = await bookingRepository.addBooking(userId, roomId);
+
+  return booking;
+}
+
+async function updateBooking(userId: number, roomId: number) {
+  const hotelRooms = await bookingRepository.findRoom(roomId);
+  // console.log(hotelRooms);
   if (!hotelRooms) throw notFoundError();
+  if (hotelRooms.Booking[0]) throw forbiddenError();
+
+  const previousBooking = await bookingRepository.findBooking(userId);
+  if (!previousBooking) throw forbiddenError();
 
   const booking = await bookingRepository.addBooking(userId, roomId);
 
   return booking;
 }
 
-export default { createBooking };
+export default { createBooking, updateBooking };

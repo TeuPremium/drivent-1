@@ -387,9 +387,15 @@ describe('put /booking', () => {
     await createTicket(enrollment.id, ticketType.id, TicketStatus.PAID);
 
     const room = generateValidRoom(addHotel.id);
+    const room2 = generateValidRoom(addHotel.id);
     const roomInfo = await createRoom(room.name, room.capacity, room.hotelId);
+    createRoom(room2.name, room2.capacity, room2.hotelId);
+    const { roomId } = await bookingsFactory.createBooking(user.id, roomInfo.id);
 
-    const response = await server.put('/booking').set('Authorization', `Bearer ${token}`).send({ roomId: roomInfo.id });
+    const response = await server
+      .put('/booking')
+      .set('Authorization', `Bearer ${token}`)
+      .send({ roomId: roomId + 1 });
 
     expect(response.status).toEqual(httpStatus.OK);
   });
