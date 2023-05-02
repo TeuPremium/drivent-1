@@ -381,6 +381,8 @@ describe('put /booking', () => {
     const user = await createUser();
     const token = await generateValidToken(user);
     const enrollment = await createEnrollmentWithAddress(user);
+    console.log(enrollment);
+    console.log(user);
 
     const ticketType = await createTicketType(false, true);
     await createTicket(enrollment.id, ticketType.id, TicketStatus.PAID);
